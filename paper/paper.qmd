@@ -20,11 +20,11 @@ bibliography: references.bib
 library(tidyverse)
 library(ggplot2)
 library(opendatatoronto)
+library(knitr)
 
 data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
 ```
-
 
 # Introduction
 
@@ -37,57 +37,114 @@ The remainder of this paper is structured as follows: @sec-data discusses the da
 
 
 # Data {#sec-data}
+## Overview {#sec-overview}
 
-Some of our data is of penguins (), from @palmerpenguins.
+The dataset used in the paper covers bicycle thefts reported to the Toronto Police system between 2014 and 2024. This dataset has been updated as of June 2024 and is considered reliable as it is based on the Toronto Police system.
+
+The dataset was downloaded from OpenDataToronto, and its setup was completed with the help of tidyverse, janitor, and tidyr.
+
+The original dataset contained 28 variables, but I used the following: ID, occurrence date, occurrence year, premises type, and bike cost. Then, I created a new group called "cost group" based on the bike cost, categorizing the bicycles according to their price range. Since the dataset is based on the date the theft was reported, I organized the data by the actual date of occurrence to reflect events from 2014 to 2022, excluding incidents that occurred before 2014. Additionally, during the data cleaning phase, observations with missing information were excluded. As a result, the dataset used in this paper contains 28,293 observations. (@tbl-head) shows an first 5 row of the data used.
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
+#| label: tbl-head
+#| tbl-cap: First 5 rows of data
+#| warning: false
+#| message: false
 #| echo: false
+
+data |>
+  slice(1:5) |>
+  kable(
+    digits = 4,
+    booktabs = TRUE,
+    linesep = ""
+  )
+```
+
+
+## Number of Occurrence
+
+First, we will examine how many bicycle thefts occurred by date. @fig-occur is a line chart that records thefts on a daily basis. Bicycle thefts showed an increasing trend from 2014, followed by a noticeable decrease starting in 2020.
+
+There were also clear differences by season. Each year, there was a sharp increase in thefts during the middle of the year, while the beginning and end of the year saw a sharp decline, showing a cyclical pattern. This indicates that thefts significantly increased during the summer season, while they were almost non-existent in the winter compared to summer.
+
+```{r}
+#| label: fig-occur
+#| fig-cap: Number of bicycle theft incidents
+#| warning: false
+#| message: false
+#| echo: false
+
+date_counts <- as.data.frame(table(data$occ_date))
+colnames(date_counts) <- c("date", "count")
+date_counts|>
+  ggplot(aes(x = as.Date(date), y = count)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Date", y = "Number of Occurrences")
 
 ```
 
-Talk more about it.
+## Types of Crime Scenes
 
-And also planes (). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+In this dataset, crime scenes have been categorized into seven types: Apartment, Commercial, Educational, House, Outside, Transit, and Others. As seen in @fig-crime-scenes, there has been significant fluctuation in crimes committed in residential areas. Residential areas are classified into two categories: apartments and houses. Among them, apartment-related thefts showed a steady linear increase until 2019, but in 2020, the number dropped by around 200 incidents in one year, returning to 2017 levels by 2022. House-related thefts followed a zigzag pattern, increasing from 2014 and reaching a peak in 2020, before dropping to less than half by 2022.
+
+Another interesting point is that thefts committed outdoors were more frequent than those in apartments before 2019. However, starting in 2019, apartment thefts surpassed outdoor thefts, until 2022, when outdoor thefts once again became more common than apartment thefts.
 
 ```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
+#| label: fig-crime-scenes
+#| fig-cap: Number of occurrences categorized by crime scene
 #| echo: false
 #| warning: false
 #| message: false
-date_counts <- as.data.frame(table(data$occ_date))
-colnames(date_counts) <- c("date", "count")
-ggplot(date_counts, aes(x=as.Date(date), y=count)) + geom_line()
-
-```
-
-Talk way more about it. 
-
-```{r}
 data |>
-  ggplot(mapping = aes(x=occ_year, fill = premises_type)) + geom_bar(position = "dodge2")
+  ggplot(mapping = aes(x=occ_year, fill = premises_type)) + 
+  geom_bar(position = "dodge2") +
+  labs(x = "Year", y = "Number of Occurrences", fill = "Types of Crime Scenes") +
+  theme(legend.position = "bottom")
 
 ```
 
+## Cost of Stolen Bicycle
 
+The original dataset includes a variable for the price of stolen bicycles, but it does not contain a variable for grouped prices. Therefore, I created a new variable called cost_group by grouping the prices in increments of $500. @fig-stolen-bike shows a bar graph with number of bike stolen by year categorized by cost group. From 2020 to 2022, the thefts of relatively inexpensive bicycles, priced under $1,000, have significantly decreased. On the other hand, high-end bicycles priced over $2,000 were stolen about 250 times in 2014. But this number has steadily increased, reaching approximately 500 thefts by 2022.
+```{r}
+#| label: fig-stolen-bike
+#| fig-cap: Total cost of bicycle by year
+#| fig-pos: "H"
+#| echo: false
+#| warning: false
+#| message: false
+data |>
+  ggplot(mapping = aes(x=occ_year, fill = cost_group)) + 
+  geom_bar(position = "dodge2") +
+  labs(x = "Year", y = "Cost of Bicycle", fill = "Cost Group") +
+  theme(legend.position = "bottom")
 
+```
 
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+## Overall {#sec-first-point}
+The analysis of bicycle theft in Toronto has revealed trends and patterns over the nine years of theft incidents. All trends shifted starting in 2020, which appears to be a result of the lockdowns due to the pandemic. First, the overall number of thefts began to decrease from 2020, indicating a significant reduction in outdoor activities. Bicycle owners were riding their bikes less frequently, and thieves were also unable to engage in outdoor activities due to the lockdowns.
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+One of the most notable trends is that the daily theft graph exhibits a cyclical pattern. This indicates that most crimes occur in the summer, while very few happen in the winter. The winter in Toronto, with its snow and cold weather, makes cycling difficult for both owners and thieves, which likely explains the lack of activity in both groups during this season.
 
-## Second discussion point
+When examining thefts by location, we observed significant changes in residential area thefts. With the increase in remote work and online learning, more people have been at home, leading to a substantial decrease in thefts within residential spaces.
 
-## Third discussion point
+There were also intriguing observations regarding the price range of stolen bicycles. Year after year, the number of thefts of more expensive bicycles has been on the rise. This can be interpreted in two ways: either bicycle thieves have started to specifically target high-end bicycles, or the prices of bicycles available on the market have increased. What is clear is that the rising theft rates of expensive bicycles have led to more severe property losses for citizens. Bicycle theft may be considered a minor issue, but it is a clear crime that deprives someone of their valuable property or an essential means of transportation for their life.
+
+## Implication
+
+According to this data, the Toronto Police should strengthen patrols and response efforts during the summer to prevent bicycle thefts. As of the data up to 2022, thefts in residential areas have significantly decreased; however, with the end of the lockdown, there is a possibility that these incidents may rise again. Therefore, it would be beneficial to conduct preventive campaigns targeting residential areas.
+
+Regardless of their price, all bicycles are important, but there has been a recent trend of increasing thefts of high-end bicycles. To protect citizens' property, it is essential to deliver messages of caution to the community.
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
+This dataset has a significant amount of missing data, and unfortunately, I had to drop some parts of the dataset. Additionally, only theft incidents that were reported are included, meaning that incidents that were not reported for various reasons are not accounted for. These missing pieces of information may have influenced the trends or patterns identified in this paper.
+
 
 \newpage
 
