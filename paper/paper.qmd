@@ -1,0 +1,105 @@
+---
+title: "Investigating Bicycle Theft in Toronto: Trends and Patterns"
+subtitle: "."
+author: 
+  - Taejun Um
+thanks: "Code and data are available at: LINK."
+date: today
+date-format: long
+abstract: "In urban environments like Toronto, bicycle theft is as common as in any major city worldwide. This paper examines the trends and patterns of bicycle theft in Toronto from 2014 to 2022, focusing on the cost of bicycles and the types of locations where the thefts occurred. Data from this period show that the overall number of bicycle thefts did not significantly decline but began to decrease gradually from 2020, particularly in thefts occurring at residential properties and those involving high-end bicycles. These findings can inform community efforts and assist Toronto's public authorities in developing more effective strategies to protect citizens' property and reduce bicycle theft."
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(ggplot2)
+library(opendatatoronto)
+
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+```
+
+
+# Introduction
+
+Toronto is the most populous and densely populated city in Canada. As a result, traffic congestion makes it difficult for people to navigate the city, and many citizens report this as a significant issue*. This has led to an increase in the number of cyclists using bicycles for efficient point-to-point travel within the city. Currently, approximately 659 km of cycling routes are interwoven like a spider's web throughout Toronto*. Unfortunately, bicycle thefts remain a persistent problem for residents.
+
+This paper examines reported bicycle thefts in Toronto from 2014 to 2022. The main objective is to observe and analyze the number of thefts, the locations of the incidents, and the price range of the stolen bicycles. Specifically, we will compare trends in the locations of incidents by year alongside changes in the price range of the targeted bicycles. Through this investigation, I confirmed that thefts steadily increased from 2014 until 2020, when the number of thefts began to decline. Additionally, there have been notable changes in the locations where thefts occurred and the price range of the stolen bicycles over the years. Understanding these trends and patterns will help prevent future bicycle thefts, and inform new measures by Toronto’s public authorities to enhance theft prevention.
+
+The remainder of this paper is structured as follows: @sec-data discusses the data and process of data cleaning, and @sec-first-point discusses our findings, limitation of the study, and suggestions to reduce bicycle theft.
+
+
+
+# Data {#sec-data}
+
+Some of our data is of penguins (), from @palmerpenguins.
+
+```{r}
+#| label: fig-bills
+#| fig-cap: Bills of penguins
+#| echo: false
+
+```
+
+Talk more about it.
+
+And also planes (). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+
+```{r}
+#| label: fig-planes
+#| fig-cap: Relationship between wing length and width
+#| echo: false
+#| warning: false
+#| message: false
+date_counts <- as.data.frame(table(data$occ_date))
+colnames(date_counts) <- c("date", "count")
+ggplot(date_counts, aes(x=as.Date(date), y=count)) + geom_line()
+
+```
+
+Talk way more about it. 
+
+```{r}
+data |>
+  ggplot(mapping = aes(x=occ_year, fill = premises_type)) + geom_bar(position = "dodge2")
+
+```
+
+
+
+
+
+# Discussion
+
+## First discussion point {#sec-first-point}
+
+If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+
+## Second discussion point
+
+## Third discussion point
+
+## Weaknesses and next steps
+
+Weaknesses and next steps should also be included.
+
+\newpage
+
+\appendix
+
+# Appendix {-}
+
+
+
+\newpage
+
+
+# References
+
+
