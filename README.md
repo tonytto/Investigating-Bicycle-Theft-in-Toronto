@@ -1,4 +1,4 @@
-# Starter folder
+# Investigating Bicycle Theft in Toronto
 
 ## Overview
 
