@@ -18,20 +18,19 @@ library(tidyverse)
 
 
 # get package
-package <- show_package("c7d34d9b-23d2-44fe-8b3b-cd82c8b38978")
-package
-
-# get all resources for this package
-resources <- list_package_resources("c7d34d9b-23d2-44fe-8b3b-cd82c8b38978")
-
-# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
-datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
-
-# load the first datastore resource as a sample
-the_raw_data <- filter(datastore_resources, row_number()==1) %>% get_resource()
-the_raw_data
-
-#### Save data ####
-write_csv(the_raw_data, "data/raw_data/raw_data.csv") 
-
+# package <- show_package("c7d34d9b-23d2-44fe-8b3b-cd82c8b38978")
+# package
+# 
+# # get all resources for this package
+# resources <- list_package_resources("c7d34d9b-23d2-44fe-8b3b-cd82c8b38978")
+# 
+# # identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
+# datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+# 
+# # load the first datastore resource as a sample
+# the_raw_data <- filter(datastore_resources, row_number()==1) %>% get_resource()
+# the_raw_data
+# 
+# #### Save data ####
+# write_csv(the_raw_data, "data/raw_data/raw_data.csv") 
          
