@@ -38,15 +38,6 @@ cleaned_data<-
   cleaned_data|>
   filter(occ_year > 2013, occ_year < 2024)|> 
   tidyr::drop_na()
-# 
-# cleaned_data <-
-#   cleaned_data|>mutate(
-#   cost_group =
-#       factor(cost_group, levels = c("< $500", "$500 < $1000", "$1000 < $1500", "$1500 < $2000", "$2000 <")))
-# 
-# cleaned_data$occ_month <- 
-#   factor(cleaned_data$occ_month, levels = c("January", "February", "March", "April", "May", "June", 
-#                                         "July", "August", "September", "October", "November", "December"))
 
 #### Save data ####
 write_csv(cleaned_data, "data/analysis_data/analysis_data.csv")
