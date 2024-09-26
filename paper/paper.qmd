@@ -43,7 +43,7 @@ The dataset used in the paper covers bicycle thefts reported to the Toronto Poli
 
 The dataset was downloaded from OpenDataToronto, and its setup was completed with the help of tidyverse, janitor, and tidyr.
 
-The original dataset contained 28 variables, but I used the following: ID, occurrence date, occurrence year, premises type, and bike cost. Then, I created a new group called "cost group" based on the bike cost, categorizing the bicycles according to their price range. Since the dataset is based on the date the theft was reported, I organized the data by the actual date of occurrence to reflect events from 2014 to 2022, excluding incidents that occurred before 2014. Additionally, during the data cleaning phase, observations with missing information were excluded. As a result, the dataset used in this paper contains 28,293 observations. (@tbl-head) shows an first 5 row of the data used.
+The original dataset contained 28 variables, but I used the following: ID, occurrence date, occurrence year, occurrence month, premises type, and bike cost. Then, I created a new group called "cost group" based on the bike cost, categorizing the bicycles according to their price range. Since the dataset is based on the date the theft was reported, I organized the data by the actual date of occurrence to reflect events from 2014 to 2022, excluding incidents that occurred before 2014. Additionally, during the data cleaning phase, observations with missing information were excluded. As a result, the dataset used in this paper contains 30,937 observations. (@tbl-head) shows an first 5 row of the data used.
 
 ```{r}
 #| label: tbl-head
@@ -62,7 +62,7 @@ data |>
 ```
 
 
-## Number of Occurrence
+## Number of Occurrence by Year
 
 First, we will examine how many bicycle thefts occurred by date. @fig-occur is a line chart that records thefts on a daily basis. Bicycle thefts showed an increasing trend from 2014, followed by a noticeable decrease starting in 2020.
 
@@ -82,18 +82,71 @@ date_counts <- data |>
 
 ggplot(date_counts, mapping = aes(x = occ_year, y = total_occurrences)) +
   geom_line() +
+  geom_point(size = 2) +
   theme_minimal() +
-  labs(x = "Date", y = "Number of Occurrences")
+  labs(x = "Year", y = "Number of Occurrences")
 
 date_counts |>
   slice(1:10) |>
   kable(
+    col.names = c("Year", "Number of Occurrences"),
     digits = 4,
     booktabs = TRUE,
     linesep = ""
   )
 
 ```
+
+## Seasonal Effect
+
+```{r}
+#| label: fig-month
+#| fig-cap: Number of bicycle theft incidents by month
+#| warning: false
+#| message: false
+#| echo: false
+
+
+data$occ_month <- 
+  factor(data$occ_month, levels = c("January", "February", "March", "April", "May", "June", 
+                                        "July", "August", "September", "October", "November", "December"))
+
+month_grouped <- data |>
+  group_by(occ_year, occ_month) |>
+  summarise(number_of_observations = n(), .groups = "drop")
+
+ggplot(month_grouped, mapping = aes(x = occ_month, y = number_of_observations, color = factor(occ_year), group = occ_year)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2) +
+  scale_color_brewer(palette = "Set1") +
+  labs(x = "Month", y = "Number of Occurrences", color = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 12), axis.text.x = element_text(angle = 90)) +
+  scale_color_brewer(palette = "Set3")
+  
+```
+
+## Time Effect
+
+```{r}
+#| label: fig-hour
+#| fig-cap: Number of bicycle theft incidents by hour in 10 years
+#| warning: false
+#| message: false
+#| echo: false
+
+time_grouped <- data |>
+  group_by(occ_hour) |>
+  summarise(number_of_observations = n())
+
+ggplot(time_grouped, mapping = aes(x = occ_hour, y = number_of_observations)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2) +
+  labs(x = "Hour", y = "Number of Occurrences") +
+  theme_minimal() +
+  theme(text = element_text(size = 12), axis.text.x = element_text(angle = 90))
+```
+
 
 ## Types of Crime Scenes
 
@@ -147,11 +200,6 @@ data |>
     legend.position = "bottom"
   )
 ```
-
-```{r}
-
-```
-
 
 # Discussion
 
