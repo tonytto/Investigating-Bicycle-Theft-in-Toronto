@@ -13,6 +13,8 @@ library(opendatatoronto)
 library(dplyr)
 library(tidyverse)
 
+#Following codes are direct copy from opendata website. However, it only downloads first 32000 rows of observations.
+#Therefore, I decided to use read_csv function save full datasets.
 
 #### Download data ####
 
@@ -33,4 +35,7 @@ library(tidyverse)
 # 
 # #### Save data ####
 # write_csv(the_raw_data, "data/raw_data/raw_data.csv") 
-         
+
+#Downloading all data from opendatatoronto directly to get all observations.
+all_data <- read_csv("https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/c7d34d9b-23d2-44fe-8b3b-cd82c8b38978/resource/55136dac-26b1-4028-b9f5-7c2344f94153/download/bicycle-thefts%20-%204326.csv")
+write_csv(all_data, "data/raw_data/raw_data.csv")

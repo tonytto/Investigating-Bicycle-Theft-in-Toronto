@@ -24,20 +24,33 @@ cleaned_data <-
   mutate(
     cost_group =
       case_when(
-        bike_cost < 500 ~ "<500",
-        bike_cost < 1000 ~ "500<1000",
-        bike_cost < 1500 ~ "1000<1500",
-        bike_cost < 2000 ~ "1500<2000",
-        bike_cost >= 2000 ~ "2000<"
+        bike_cost < 500 ~ "< $500",
+        bike_cost < 1000 ~ "$500 < $1000",
+        bike_cost < 1500 ~ "$1000 < $1500",
+        bike_cost < 2000 ~ "$1500 < $2000",
+        bike_cost >= 2000 ~ "$2000 <"
       ),
     cost_group = 
-      factor(cost_group, levels = c("<500", "500<1000", "1000<1500", "1500<2000", "2000<"))
-  )
+      factor(cost_group, levels = c("< $500", "$500 < $1000", "$1000 < $1500", "$1500 < $2000", "$2000 <"))
+  ) 
+
 
 cleaned_data<-
   cleaned_data|>
-  filter(occ_year > 2013, occ_year < 2023)|> 
+  filter(occ_year > 2013, occ_year < 2024)|> 
   tidyr::drop_na()
+
+cleaned_data <-
+  cleaned_data|>mutate(
+  cost_group =
+      factor(cost_group, levels = c("< $500", "$500 < $1000", "$1000 < $1500", "$1500 < $2000", "$2000 <")))
+
+cleaned_data |>
+  ggplot(mapping = aes(x=occ_year, fill = cost_group)) + 
+  geom_bar(position = "dodge2") +
+  labs(x = "Year", y = "Cost of Bicycle", fill = "Cost Group") +
+  theme(legend.position = "bottom")
+
 
 
 #### Save data ####

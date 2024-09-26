@@ -74,14 +74,24 @@ There were also clear differences by season. Each year, there was a sharp increa
 #| warning: false
 #| message: false
 #| echo: false
+#| layout-ncol: 2
 
-date_counts <- as.data.frame(table(data$occ_date))
-colnames(date_counts) <- c("date", "count")
-date_counts|>
-  ggplot(aes(x = as.Date(date), y = count)) +
+date_counts <- data |>
+  group_by(occ_year) |>
+  summarise(total_occurrences = n())
+
+ggplot(date_counts, mapping = aes(x = occ_year, y = total_occurrences)) +
   geom_line() +
   theme_minimal() +
   labs(x = "Date", y = "Number of Occurrences")
+
+date_counts |>
+  slice(1:10) |>
+  kable(
+    digits = 4,
+    booktabs = TRUE,
+    linesep = ""
+  )
 
 ```
 
@@ -100,8 +110,13 @@ Another interesting point is that thefts committed outdoors were more frequent t
 data |>
   ggplot(mapping = aes(x=occ_year, fill = premises_type)) + 
   geom_bar(position = "dodge2") +
+  facet_wrap(~ premises_type) +
   labs(x = "Year", y = "Number of Occurrences", fill = "Types of Crime Scenes") +
-  theme(legend.position = "bottom")
+  theme(
+    legend.text = element_text(size = 7),
+    legend.title = element_text(size = 9),
+    legend.key.size = unit(0.4, "cm"),legend.position = "bottom"
+    )
 
 ```
 
@@ -115,11 +130,25 @@ The original dataset includes a variable for the price of stolen bicycles, but i
 #| echo: false
 #| warning: false
 #| message: false
+
+data <-
+  data|>mutate(
+  cost_group =
+      factor(cost_group, levels = c("< $500", "$500 < $1000", "$1000 < $1500", "$1500 < $2000", "$2000 <")))
 data |>
   ggplot(mapping = aes(x=occ_year, fill = cost_group)) + 
-  geom_bar(position = "dodge2") +
+  geom_bar() +
+  facet_wrap(~ cost_group) +
   labs(x = "Year", y = "Cost of Bicycle", fill = "Cost Group") +
-  theme(legend.position = "bottom")
+  theme(
+    legend.text = element_text(size = 7),
+    legend.title = element_text(size = 9),
+    legend.key.size = unit(0.4, "cm"),
+    legend.position = "bottom"
+  )
+```
+
+```{r}
 
 ```
 
