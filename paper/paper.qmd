@@ -35,7 +35,7 @@ The remainder of this paper is structured as follows: @sec-data discusses the da
 
 
 # Data {#sec-data}
-## Overview {#sec-overview}
+## Overview {#sec-data-overview}
 
 The dataset used in the paper covers bicycle thefts reported to the Toronto Police system between 2014 and 2024. This dataset has been updated as of June 2024 and is considered reliable as it is based on the Toronto Police system.
 
@@ -60,19 +60,17 @@ data |>
 ```
 
 
-## Number of Occurrence by Year
+## Number of Occurrences by Time
 
-First, we will examine how many bicycle thefts occurred by date. @fig-occur is a line chart that records thefts on a daily basis. Bicycle thefts showed an increasing trend from 2014, followed by a noticeable decrease starting in 2020.
+First, we will examine how many bicycle thefts occurred by year. In @fig-occur-year-1, the line chart records thefts yearly and the table records the number of incidents in numbers. Bicycle thefts showed an increasing trend from 2014, peaking in 2018 with 3,418 recorded incidents, followed by a noticeable decrease starting in 2021. The decrements that happened in 2021 continued through 2023. According to @fig-occur-year-2, the number of incidents recorded in 2022 was 2,491 which was fewer than 2,511 incidents recorded in 2014. This indicates that the trend of bicycle theft has been decreasing over the last three years.
 
-There were also clear differences by season. Each year, there was a sharp increase in thefts during the middle of the year, while the beginning and end of the year saw a sharp decline, showing a cyclical pattern. This indicates that thefts significantly increased during the summer season, while they were almost non-existent in the winter compared to summer.
 
 ```{r}
-#| label: fig-occur
-#| fig-cap: Number of bicycle theft incidents
+#| label: fig-occur-year
+#| fig-cap: Number of bicycle theft incidents by year
 #| warning: false
 #| message: false
 #| echo: false
-#| layout-ncol: 2
 
 date_counts <- data |>
   group_by(occ_year) |>
@@ -84,6 +82,14 @@ ggplot(date_counts, mapping = aes(x = occ_year, y = total_occurrences)) +
   theme_minimal() +
   labs(x = "Year", y = "Number of Occurrences")
 
+```
+```{r}
+#| label: tbl-occur-year
+#| tbl-cap: Number of bicycle theft incidents by year
+#| warning: false
+#| message: false
+#| echo: false
+
 date_counts |>
   slice(1:10) |>
   kable(
@@ -92,10 +98,10 @@ date_counts |>
     booktabs = TRUE,
     linesep = ""
   )
-
 ```
 
-## Seasonal Effect
+@fig-month shows the number of incidents that occurred by month with each line representing a different year. This graph indicates there are clear differences by season. Each year, there was a sharp increase in thefts during the middle of the year, while the beginning and end of the year saw a sharp decline, showing a cyclical pattern. The number of incidents peaked in the summer months (June to August) and the incidents in January and December dropped to less than one-third compared to the summer months in all years. 
+
 
 ```{r}
 #| label: fig-month
@@ -103,7 +109,7 @@ date_counts |>
 #| warning: false
 #| message: false
 #| echo: false
-
+#| fig-pos: "H"
 
 data$occ_month <- 
   factor(data$occ_month, levels = c("January", "February", "March", "April", "May", "June", 
@@ -124,25 +130,41 @@ ggplot(month_grouped, mapping = aes(x = occ_month, y = number_of_observations, c
   
 ```
 
-## Time Effect
+### By hour
+
+@fig-hour represents the number of bicycle theft incidents over an hour. @fig-hour-1 shows the average number of incidents across all years, while the @fig-hour-2 illustrates the number of incidents for each year over an hour. Graph 1 shows that there is a steady increase in thefts from 5 AM to 6 PM, and after that, the numbers begin to decline. Notably, there are three distinct peaks at 9 AM, 12 PM, and 6 PM, corresponding to periods of high social activity and movement. On average over the past decade, the lowest number of incidents occurred at 5 AM, with 37.3 thefts reported annually, whereas 6 PM saw the highest, with 218 thefts per year. From 1 AM to 7 AM, fewer than 100 incidents were recorded each year, but beyond that, the number consistently exceeded 100.
 
 ```{r}
 #| label: fig-hour
 #| fig-cap: Number of bicycle theft incidents by hour in 10 years
+#| fig-subcap: ["Average in Year","Separated in Each Year"]
 #| warning: false
 #| message: false
 #| echo: false
+#| layout-ncol: 2
+#| fig-pos: "H"
 
 time_grouped <- data |>
   group_by(occ_hour) |>
-  summarise(number_of_observations = n())
+  summarise(number_of_observations = n()/10)
 
 ggplot(time_grouped, mapping = aes(x = occ_hour, y = number_of_observations)) +
   geom_line(size = 0.5) +
   geom_point(size = 2) +
   labs(x = "Hour", y = "Number of Occurrences") +
+  theme_minimal()
+
+time_grouped_sep <- data |>
+  group_by(occ_year, occ_hour) |>
+  summarise(number_of_observations_h = n(), .groups = "drop")
+
+ggplot(time_grouped_sep, mapping = aes(x = occ_hour, y = number_of_observations_h, color = factor(occ_year), group = occ_year)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2) +
+  scale_color_brewer(palette = "Set1") +
+  labs(x = "Month", y = "Number of Occurrences", color = "Year") +
   theme_minimal() +
-  theme(text = element_text(size = 12), axis.text.x = element_text(angle = 90))
+  scale_color_brewer(palette = "Set3")
 ```
 
 
@@ -158,6 +180,8 @@ Another interesting point is that thefts committed outdoors were more frequent t
 #| echo: false
 #| warning: false
 #| message: false
+#| fig-pos: "H"
+
 data |>
   ggplot(mapping = aes(x=occ_year, fill = premises_type)) + 
   geom_bar(position = "dodge2") +
