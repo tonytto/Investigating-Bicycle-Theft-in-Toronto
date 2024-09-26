@@ -9,7 +9,6 @@
 
 #### Workspace setup ####
 library(tidyverse)
-library(dplyr)
 
 #### Clean data ####
 raw_data <- read_csv("data/raw_data/raw_data.csv")

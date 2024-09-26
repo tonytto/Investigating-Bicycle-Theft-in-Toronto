@@ -10,7 +10,6 @@
 
 #### Workspace setup ####
 library(opendatatoronto)
-library(dplyr)
 library(tidyverse)
 
 #Following codes are direct copy from opendata website. However, it only downloads first 32000 rows of observations.
