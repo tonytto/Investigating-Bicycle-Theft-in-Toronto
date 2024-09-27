@@ -1,7 +1,7 @@
 #### Preamble ####
 # Purpose: Cleans the raw data and add new variable to categorize bike cost.
 # Author: Taejun Um
-# Date: 24 September 2024
+# Date: 27 September 2024
 # Contact: taejun.um@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: Need to have downloaded the data
