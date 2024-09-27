@@ -41,7 +41,7 @@ The dataset used in the paper covers reported bicycle thefts to the Toronto Poli
 
 The dataset was downloaded from Toronto's Open Data Portal using opendatatoronto package [@opendatatoronto]. Its setup was completed through R [@citeR] with the help of tidyverse package [@citetidyverse], janitor package [@citejanitor], knitr package [@citeknitr], here package [@citehere], ggplot2 package [@citeggplot2], dplyr package [@citedplyr], tibble package [@citetibble], and readr package [@citereadr].
 
-The original dataset contained 28 variables, but I used the following: ID, occurrence date, occurrence year, occurrence month, occurrence hour, premises type, and bike cost. Then, I created a new group called "cost group" based on the bike cost, categorizing the bicycles with an increment of $500 according to their price range. Since the dataset is based on the date the theft was reported, I organized the data to reflect events from 2014 to 2023, excluding incidents that occurred before 2014 and after 2023. Additionally, during the data cleaning phase, observations with missing information were excluded. As a result, the dataset used in this paper contains 29,217 observations from 34,962 observations. (@tbl-head) shows the first 5 rows of the data used.
+The original dataset contained 28 variables, but I used the following: ID, occurrence date, occurrence year, occurrence month, occurrence hour, premises type, and bike cost. Then, I created a new group called "cost group" based on the bike cost, categorizing the bicycles with an increment of $500 according to their price range. Since the dataset is based on the date the theft was reported, I organized the data to reflect events from 2014 to 2023, excluding incidents that occurred before 2014 and after 2023. Additionally, during the data cleaning phase, observations with missing information were excluded. As a result, the dataset used in this paper contains 29,217 observations from 34,962 observations. @tbl-head shows the first 5 rows of the data used.
 
 ```{r}
 #| label: tbl-head
@@ -138,8 +138,8 @@ ggplot(month_grouped, mapping = aes(x = occ_month, y = number_of_observations, c
 
 ```{r}
 #| label: fig-hour
-#| fig-cap: Number of bicycle theft incidents by hour in 10 years
-#| fig-subcap: ["Average in Year","Separated in Each Year"]
+#| fig-cap: Number of bicycle theft incidents by hour
+#| fig-subcap: ["Average by Year","Separated by Each Year"]
 #| warning: false
 #| message: false
 #| echo: false
@@ -164,7 +164,7 @@ ggplot(time_grouped_sep, mapping = aes(x = occ_hour, y = number_of_observations_
   geom_line(size = 0.5) +
   geom_point(size = 2) +
   scale_color_brewer(palette = "Set1") +
-  labs(x = "Month", y = "Number of Occurrences", color = "Year") +
+  labs(x = "Hour", y = "Number of Occurrences", color = "Year") +
   theme_minimal() +
   scale_color_brewer(palette = "Set3")
 ```
@@ -205,14 +205,14 @@ premises_data_occ <- data %>%
 
 ## Cost of Stolen Bicycle
 
-The original dataset includes a variable for the price of stolen bicycles, but it does not contain a variable for grouped prices. Therefore, I created a new variable called cost_group by grouping the prices in increments of $500 and it's divided into 5 groups. @fig-stolen-bike shows a bar graph with number of bike stolen by year categorized by cost group. 
+The original dataset includes a variable for the price of stolen bicycles, but it does not contain a variable for grouped prices. Therefore, I created a new variable called cost_group by grouping the prices in increments of $500 and it's divided into 5 groups. @fig-group-cost shows a bar graph with number of bike stolen by year categorized by cost group. 
 The patterns of occurrence depend on the price range of the stolen bicycles. Bicycles under $1,000 have been on a downward trend. Bicycles under $500 and between $500 and $1,000 decreased 52.2 percent and 42.2 percent, respectively, in 2023 compared to 2017 and 2018. The number of stolen bicycles under $1,000 fell by about half from their peak, while high-end bicycles saw an increase in the number of occurrences.
 Bicycles priced between $1,000 and $1,500 saw a 64.4% increase in theft compared to 2014, while those priced above $2,000 saw a 119.4% increase compared to 2014.
 Bicycles ranging from $1500 to $2000 have recently seen a 34.8% increase from 2021 to 2023, although the number of thefts has not increased as much as other $1,000+ bikes.
 
 ```{r}
-#| label: fig-stolen-bike
-#| fig-cap: Total cost of bicycle by year
+#| label: fig-group-cost
+#| fig-cap: Number of occurrences categorized by price of bicycle
 #| fig-pos: "H"
 #| echo: false
 #| warning: false
@@ -226,7 +226,7 @@ data |>
   ggplot(mapping = aes(x=occ_year, fill = cost_group)) + 
   geom_bar() +
   facet_wrap(~ cost_group) +
-  labs(x = "Year", y = "Cost of Bicycle", fill = "Cost Group") +
+  labs(x = "Year", y = "Number of Occurrences", fill = "Cost Group") +
   theme(
     legend.text = element_text(size = 7),
     legend.title = element_text(size = 9),
