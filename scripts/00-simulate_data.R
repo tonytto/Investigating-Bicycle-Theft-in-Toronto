@@ -43,11 +43,11 @@ simulated_data <-
     bike_cost = round(rgamma(100, 3, 0.005), 2),
     cost_group =
       case_when(
-        bike_cost < 500 ~ "<500",
-        bike_cost < 1000 ~ "500<1000",
-        bike_cost < 1500 ~ "1000<1500",
-        bike_cost < 2000 ~ "1500<2000",
-        bike_cost >= 2000 ~ "2000<"
+        bike_cost < 500 ~ "< $500",
+        bike_cost < 1000 ~ "$500 < $1000",
+        bike_cost < 1500 ~ "$1000 < $1500",
+        bike_cost < 2000 ~ "$1500 < $2000",
+        bike_cost >= 2000 ~ "$2000 <"
       )
     )
 
