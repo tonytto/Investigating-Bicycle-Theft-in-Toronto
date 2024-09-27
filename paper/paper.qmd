@@ -5,7 +5,7 @@ author:
 thanks: "Code and data are available at: https://github.com/tonytto/Investigating-Bicycle-Theft-in-Toronto"
 date: today
 date-format: long
-abstract: "In urban environments like Toronto, bicycle theft is as common as in any major city worldwide. This paper examines the trends and patterns of bicycle theft in Toronto from 2014 to 2022, focusing on the cost of bicycles and the types of locations where the thefts occurred. Data from this period show that the overall number of bicycle thefts did not significantly decline but began to decrease gradually from 2020, particularly in thefts occurring at residential properties and those involving high-end bicycles. These findings can inform community efforts and assist Toronto's public authorities in developing more effective strategies to protect citizens' property and reduce bicycle theft."
+abstract: "In urban environments like Toronto, bicycle theft is as common as in any major city worldwide. This paper examines the trends and patterns of bicycle theft in Toronto from 2014 to 2023, focusing on the time of occurrence, the types of locations where the theft occurred, and the cost of bicycles. The following are the main findings from this data: the overall number of bicycle thefts has decreased since 2021, the an increasing trend of occurrences of incidents in both commercial districts and public transportation and there is a notable rise in high-end bicycles getting stolen. These findings can inform community efforts and assist Toronto's public authorities in developing more effective strategies to protect citizens' property and reduce bicycle theft."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -28,20 +28,20 @@ data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
 Toronto is the most populous and densely populated city in Canada. As a result, traffic congestion makes it difficult for people to navigate the city, and many citizens report this as a significant issue [@traffic]. This has led to an increase in the number of cyclists using bicycles for efficient point-to-point travel within the city. Currently, approximately 659 km of cycling routes are interwoven like a spider's web throughout Toronto [@bikelane]. Unfortunately, bicycle thefts remain a persistent problem for residents.
 
-This paper examines reported bicycle thefts in Toronto from 2014 to 2022. The main objective is to observe and analyze the number of thefts, the locations of the incidents, and the price range of the stolen bicycles. Specifically, we will compare trends in the locations of incidents by year alongside changes in the price range of the targeted bicycles. Through this investigation, I confirmed that thefts steadily increased from 2014 until 2020, when the number of thefts began to decline. Additionally, there have been notable changes in the locations where thefts occurred and the price range of the stolen bicycles over the years. Understanding these trends and patterns will help prevent future bicycle thefts, and inform new measures by Toronto’s public authorities to enhance theft prevention.
+This paper examines reported bicycle thefts in Toronto from 2014 to 2023. The main objective is to observe and analyze the number of thefts, the locations of the incidents, and the price range of the stolen bicycles. Specifically, we will compare trends in the locations of incidents by year alongside changes in the price range of the targeted bicycles. Through this investigation, I confirmed that thefts steadily increased from 2014 until 2020 but thefts dropped since 2021. Additionally, there have been notable changes in the locations where thefts occurred and the price range of the stolen bicycles over the years. Understanding these trends and patterns will help prevent future bicycle thefts, and inform new measures by Toronto’s public authorities to enhance theft prevention.
 
-The remainder of this paper is structured as follows: @sec-data discusses the data and process of data cleaning, and @sec-first-point discusses our findings, limitation of the study, and suggestions to reduce bicycle theft.
+The remainder of this paper is structured as follows: @sec-data discusses the data and process of data cleaning, and @sec-discuss discusses our findings, limitations of the study, and suggestions to reduce bicycle theft.
 
 
 
 # Data {#sec-data}
 ## Overview {#sec-data-overview}
 
-The dataset used in the paper covers bicycle thefts reported to the Toronto Police system between 2014 and 2024. This dataset has been updated as of June 2024 and is considered reliable as it is based on the Toronto Police system.
+The dataset used in the paper covers reported bicycle thefts to the Toronto Police System between 2013 and 2024. This dataset was updated in June 2024 and is considered reliable as it is based on the Toronto Police system. Since the police system only has reported data, cases that are not reported to the police are not on the data. This data has variables of occurred time, reported time, stolen location, type of bike, cost of a bike, and current status of the bike.
 
-The dataset was downloaded from Toronto's Open Data Portal using opendatatoronto package [@opendatatoronto]. Its setup was completed through R [@citeR] with the help of tidyverse package [@citetidyverse], janitor package [@citejanitor] and knitr package [@citeknitr].
+The dataset was downloaded from Toronto's Open Data Portal using opendatatoronto package [@opendatatoronto]. Its setup was completed through R [@citeR] with the help of tidyverse package [@citetidyverse], janitor package [@citejanitor], knitr package [@citeknitr], here package [@citehere], ggplot2 package [@citeggplot2], dplyr package [@citedplyr], tibble package [@citetibble], and readr package [@citereadr].
 
-The original dataset contained 28 variables, but I used the following: ID, occurrence date, occurrence year, occurrence month, occurrence hour, premises type, and bike cost. Then, I created a new group called "cost group" based on the bike cost, categorizing the bicycles according to their price range. Since the dataset is based on the date the theft was reported, I organized the data by the actual date of occurrence to reflect events from 2014 to 2022, excluding incidents that occurred before 2014. Additionally, during the data cleaning phase, observations with missing information were excluded. As a result, the dataset used in this paper contains 29,217 observations. (@tbl-head) shows an first 5 row of the data used.
+The original dataset contained 28 variables, but I used the following: ID, occurrence date, occurrence year, occurrence month, occurrence hour, premises type, and bike cost. Then, I created a new group called "cost group" based on the bike cost, categorizing the bicycles with an increment of $500 according to their price range. Since the dataset is based on the date the theft was reported, I organized the data to reflect events from 2014 to 2023, excluding incidents that occurred before 2014 and after 2023. Additionally, during the data cleaning phase, observations with missing information were excluded. As a result, the dataset used in this paper contains 29,217 observations from 34,962 observations. (@tbl-head) shows the first 5 rows of the data used.
 
 ```{r}
 #| label: tbl-head
@@ -61,9 +61,9 @@ data |>
 
 
 ## Number of Occurrences by Time
+### By Year
 
-First, we will examine how many bicycle thefts occurred by year. In @fig-occur-year-1, the line chart records thefts yearly and the table records the number of incidents in numbers. Bicycle thefts showed an increasing trend from 2014, peaking in 2018 with 3,418 recorded incidents, followed by a noticeable decrease starting in 2021. The decrements that happened in 2021 continued through 2023. According to @fig-occur-year-2, the number of incidents recorded in 2022 was 2,491 which was fewer than 2,511 incidents recorded in 2014. This indicates that the trend of bicycle theft has been decreasing over the last three years.
-
+First, we will examine how many bicycle thefts occurred by year. In @fig-occur-year, the line chart records thefts yearly and the table records the number of incidents in numbers. Bicycle thefts showed an increasing trend from 2014, peaking in 2018 with 3,418 recorded incidents, followed by a noticeable decrease starting in 2021. The decrements that happened in 2021 continued through 2023. According to @tbl-occur-year, the number of incidents recorded in 2022 was 2,491 which was fewer than 2,511 incidents recorded in 2014. This indicates that the trend of bicycle theft has been decreasing over the last three years.
 
 ```{r}
 #| label: fig-occur-year
@@ -100,6 +100,8 @@ date_counts |>
   )
 ```
 
+### By Month
+
 @fig-month shows the number of incidents that occurred by month with each line representing a different year. This graph indicates there are clear differences by season. Each year, there was a sharp increase in thefts during the middle of the year, while the beginning and end of the year saw a sharp decline, showing a cyclical pattern. The number of incidents peaked in the summer months (June to August) and the incidents in January and December dropped to less than one-third compared to the summer months in all years. 
 
 
@@ -130,9 +132,9 @@ ggplot(month_grouped, mapping = aes(x = occ_month, y = number_of_observations, c
   
 ```
 
-### By hour
+### By Hour
 
-@fig-hour represents the number of bicycle theft incidents over an hour. @fig-hour-1 shows the average number of incidents across all years, while the @fig-hour-2 illustrates the number of incidents for each year over an hour. Graph 1 shows that there is a steady increase in thefts from 5 AM to 6 PM, and after that, the numbers begin to decline. Notably, there are three distinct peaks at 9 AM, 12 PM, and 6 PM, corresponding to periods of high social activity and movement. On average over the past decade, the lowest number of incidents occurred at 5 AM, with 37.3 thefts reported annually, whereas 6 PM saw the highest, with 218 thefts per year. From 1 AM to 7 AM, fewer than 100 incidents were recorded each year, but beyond that, the number consistently exceeded 100.
+@fig-hour represents the number of bicycle theft incidents over an hour. @fig-hour-1 shows the average number of incidents across all years, while the @fig-hour-2 illustrates the number of incidents for each year over an hour. @fig-hour-1 shows that there is a steady increase in thefts from 5 AM to 6 PM, and after that, the numbers begin to decline. Notably, there are three distinct peaks at 9 AM, 12 PM, and 6 PM, corresponding to periods of high social activity and movement. On average over the past decade, the lowest number of incidents occurred at 5 AM, with 37.3 thefts reported annually, whereas 6 PM saw the highest, with 218 thefts per year. From 1 AM to 7 AM, fewer than 100 incidents were recorded each year, but beyond that, the number consistently exceeded 100.
 
 ```{r}
 #| label: fig-hour
@@ -170,9 +172,11 @@ ggplot(time_grouped_sep, mapping = aes(x = occ_hour, y = number_of_observations_
 
 ## Types of Crime Scenes
 
-In this dataset, crime scenes have been categorized into seven types: Apartment, Commercial, Educational, House, Outside, Transit, and Others. As seen in @fig-crime-scenes, there has been significant fluctuation in crimes committed in residential areas. Residential areas are classified into two categories: apartments and houses. Among them, apartment-related thefts showed a steady linear increase until 2019, but in 2020, the number dropped by around 200 incidents in one year, returning to 2017 levels by 2022. House-related thefts followed a zigzag pattern, increasing from 2014 and reaching a peak in 2020, before dropping to less than half by 2022.
-
-Another interesting point is that thefts committed outdoors were more frequent than those in apartments before 2019. However, starting in 2019, apartment thefts surpassed outdoor thefts, until 2022, when outdoor thefts once again became more common than apartment thefts.
+In this dataset, crime scenes have been categorized into seven types: Apartment, Commercial, Educational, House, Outside, Transit, and Others. As seen in @fig-crime-scenes, the number of thefts shows a different pattern depending on the crime location. In the case of apartments, incidents surged from 315 in 2014 to 1,101 in 2020, marking a 249.5% increase over seven years. However, residential areas like apartments and houses peaked in 2020 and then declined. Apartment thefts dropped by 45.1% in just three years, with 604 incidents recorded in 2023, while house thefts saw a 42.3% decrease.
+'Outside' sector also experienced a peak in 2018, followed by a downward trend until 2023, with a 43.7% decline.
+'Commercial' buildings have shown a sinusoidal pattern since 2014. Although they hit a low point in 2021, thefts increased by 25.7% by 2023, indicating a recent and consistent upward trend.
+The 'Transit' sector, while having relatively fewer incidents compared to other sectors, has seen a rising trend since 2020. Starting with 40 incidents in 2020, the number nearly doubled to 78 by 2023, marking a 95% increase over three years.
+The 'Academic' and 'Other' sectors showed little variation in incident numbers by year. However, both sectors experienced declines in 2020 and 2022 respectively, followed by gradual increases.
 
 ```{r}
 #| label: fig-crime-scenes
@@ -193,11 +197,19 @@ data |>
     legend.key.size = unit(0.4, "cm"),legend.position = "bottom"
     )
 
+premises_data_occ <- data %>%
+  group_by(occ_year, premises_type) %>%
+  summarise(number_of_occurrences = n(), .groups = "drop")
+
 ```
 
 ## Cost of Stolen Bicycle
 
-The original dataset includes a variable for the price of stolen bicycles, but it does not contain a variable for grouped prices. Therefore, I created a new variable called cost_group by grouping the prices in increments of $500. @fig-stolen-bike shows a bar graph with number of bike stolen by year categorized by cost group. From 2020 to 2022, the thefts of relatively inexpensive bicycles, priced under $1,000, have significantly decreased. On the other hand, high-end bicycles priced over $2,000 were stolen about 250 times in 2014. But this number has steadily increased, reaching approximately 500 thefts by 2022.
+The original dataset includes a variable for the price of stolen bicycles, but it does not contain a variable for grouped prices. Therefore, I created a new variable called cost_group by grouping the prices in increments of $500 and it's divided into 5 groups. @fig-stolen-bike shows a bar graph with number of bike stolen by year categorized by cost group. 
+The patterns of occurrence depend on the price range of the stolen bicycles. Bicycles under $1,000 have been on a downward trend. Bicycles under $500 and between $500 and $1,000 decreased 52.2 percent and 42.2 percent, respectively, in 2023 compared to 2017 and 2018. The number of stolen bicycles under $1,000 fell by about half from their peak, while high-end bicycles saw an increase in the number of occurrences.
+Bicycles priced between $1,000 and $1,500 saw a 64.4% increase in theft compared to 2014, while those priced above $2,000 saw a 119.4% increase compared to 2014.
+Bicycles ranging from $1500 to $2000 have recently seen a 34.8% increase from 2021 to 2023, although the number of thefts has not increased as much as other $1,000+ bikes.
+
 ```{r}
 #| label: fig-stolen-bike
 #| fig-cap: Total cost of bicycle by year
@@ -221,14 +233,17 @@ data |>
     legend.key.size = unit(0.4, "cm"),
     legend.position = "bottom"
   )
+cost_data_occ <- data %>%
+  group_by(occ_year, cost_group) %>%
+  summarise(number_of_occurrences = n(), .groups = "drop")
 ```
 
-# Discussion
+# Discussion {#sec-discuss}
 
-## Overall {#sec-first-point}
-The analysis of bicycle theft in Toronto has revealed trends and patterns over the nine years of theft incidents. All trends shifted starting in 2020, which appears to be a result of the lockdowns due to the pandemic. First, the overall number of thefts began to decrease from 2020, indicating a significant reduction in outdoor activities. Bicycle owners were riding their bikes less frequently, and thieves were also unable to engage in outdoor activities due to the lockdowns.
+## Overall
+The analysis of bicycle theft in Toronto has revealed trends and patterns over the ten years of theft incidents. Most of the trends shifted starting in 2021, which appears to be a result of the lockdowns due to the pandemic. First, the overall number of thefts began to decrease from 2021, indicating a significant reduction in outdoor activities. Bicycle owners were riding their bikes less frequently, and thieves were also unable to engage in outdoor activities due to the lockdowns.
 
-One of the most notable trends is that the daily theft graph exhibits a cyclical pattern. This indicates that most crimes occur in the summer, while very few happen in the winter. The winter in Toronto, with its snow and cold weather, makes cycling difficult for both owners and thieves, which likely explains the lack of activity in both groups during this season.
+One of the most notable trends is that the monthly theft graph exhibits a cyclical pattern. This indicates that most crimes occur in the summer, while very few happen in the winter. The winter in Toronto, with its snow and cold weather, makes cycling difficult for both owners and thieves, which likely explains the lack of activity in both groups during this season.
 
 When examining thefts by location, we observed significant changes in residential area thefts. With the increase in remote work and online learning, more people have been at home, leading to a substantial decrease in thefts within residential spaces.
 
@@ -246,15 +261,6 @@ This dataset has a significant amount of missing data, and unfortunately, I had 
 
 
 \newpage
-
-\appendix
-
-# Appendix {-}
-
-
-
-\newpage
-
 
 # References
 
