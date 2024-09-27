@@ -18,4 +18,4 @@ The repo is structured as:
 
 ## Statement on LLM usage
 
-GPT-4 was used to aid in the writing of this paper. It was mainly used for coding aspects, such as cleaning data and drawing graphs. The entire chat history is available in inputs/llms/usage.txt.
+GPT-4 was used to aid in the writing of this paper. It was mainly used for coding aspects, such as cleaning data and drawing graphs. The entire chat history is available in other/llm/usage.txt.
