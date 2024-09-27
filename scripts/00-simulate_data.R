@@ -1,7 +1,7 @@
 #### Preamble ####
-# Purpose: Simulates... [...UPDATE THIS...]
+# Purpose: Simulates Bicycle Theft data for Toronto from 2014 to 2023
 # Author: Taejun Um
-# Date: 24 September 2024
+# Date: 27 September 2024
 # Contact: taejun.um@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: None
@@ -10,7 +10,6 @@
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
 
 #### Simulate data ####
 set.seed(4020)
@@ -29,14 +28,19 @@ year_value <- format(sample_date, "%Y")
 #Create a set of premises
 sample_premises <- c("Apartment", "Commercial", "Educational", "House", "Other",
                      "Outside", "Transit")
+sample_months <- sample(c("January", "February", "March", "April", "May", "June", 
+                   "July", "August", "September", "October", "November", "December"), 100, replace = TRUE)
+sample_hour <- sample(1:23, 100, replace = TRUE)
 
 simulated_data <-
   tibble(
     id = 1:100,
     occ_date = sample_date,
     occ_year = year_value,
+    occ_month = sample_months,
+    occ_hour = sample_hour,
     premises_type = sample(sample_premises, 100, TRUE),
-    bike_cost = rgamma(100, 3, 0.005),
+    bike_cost = round(rgamma(100, 3, 0.005), 2),
     cost_group =
       case_when(
         bike_cost < 500 ~ "<500",
